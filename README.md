@@ -3,9 +3,11 @@ Application Log Management with Elasticsearch, Filebeat, and Kibana by using Doc
 
 **Filebeat:**
 Filebeat is a part of Elastic Stack. It is an open source tool that serves to forward logs with the agent role, its purpose is to move the logs to the targeted location. In this scenario, Filebeat transmits Hello World Application logs to ElasticSearch.
+
 **Elasticsearch:**
 Elasticsearch is an open-source, distributed search and analytics engine designed for real-time search, log analytics, etc. In this scenario, Elasticsearch stores the Hello World Rest API Application logs sent by Filebeat.
-**Kibana: **
+
+**Kibana:**
 Kibana is a tool used to visualize data stored in Elasticsearch. It allows us to create a variety of visualizations such as charts, tables, and maps. In this scenario, Kibana visualizes Hello World Rest API Application logs stored in Elasticsearch.
 
 **Explanation:**
