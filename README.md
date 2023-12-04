@@ -16,8 +16,11 @@ Kibana is a tool used to visualize data stored in Elasticsearch. It allows us to
 In this case, I used Docker Compose because it provides a better way to manage and deploy this kind of multi-container applications. It allows us to define all of these containers and their relationships in a single YAML file.
 
 **Port Explanations in the docker-compose.yaml file:**
+
 9200: Elasticsearch HTTP
+
 5601: Kibana
+
 8080: Hello World Rest API App
 
 docker-compose.yaml file explanation:
