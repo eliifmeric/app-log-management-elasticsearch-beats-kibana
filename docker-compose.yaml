@@ -1,0 +1,67 @@
+version: "3.8"
+
+services:
+
+  hello-world-app:
+    image: thomaspoignant/hello-world-rest-json
+    container_name: hello-world-app
+    restart: always
+    ports:
+      - "8080:8080"
+    networks:
+      - es
+
+  filebeat:
+    image: docker.elastic.co/beats/filebeat:8.1.0
+    container_name: filebeat
+    restart: always
+    user: root
+    volumes:
+      - "./filebeat.yml:/usr/share/filebeat/filebeat.yml:ro"
+      - "/var/lib/docker/containers:/var/lib/docker/containers:ro"
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+    networks:
+      - es
+    depends_on:
+      - hello-world-app
+    environment:
+      - ELASTICSEARCH_HOSTS=${ELASTIC_HOSTS}
+    labels:
+      co.elastic.logs/enabled: "false"
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.1.0
+    container_name: elasticsearch
+    restart: always
+    ports:
+      - "0.0.0.0:9200:9200"
+    environment:
+      - ELASTIC_PASSWORD=${ELASTICSEARCH_PASSWORD}
+      - xpack.security.enabled=false
+      - discovery.type=single-node
+      - "ES_JAVA_OPTS=-Xmx1g -Xms1g"
+    volumes:
+      - "elasticsearch-data:/usr/share/elasticsearch/data"
+    networks:
+      - es
+    depends_on:
+      -  hello-world-app
+  kibana:
+    image: docker.elastic.co/kibana/kibana:8.1.0
+    container_name: kibana
+    restart: always
+    environment:
+      - ELASTICSEARCH_HOSTS=${ELASTIC_HOSTS}
+      - ELASTICSEARCH_USERNAME=${KIBANA_USERNAME}
+      - xpack.security.enabled=false
+    ports:
+      - "0.0.0.0:5601:5601" 
+    networks:
+      - es
+    depends_on:
+      - elasticsearch
+volumes:
+  elasticsearch-data:
+    driver: local
+networks:
+  es:
+    driver: bridge

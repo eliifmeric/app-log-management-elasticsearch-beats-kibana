@@ -1,0 +1,18 @@
+filebeat.autodiscover:
+  providers:
+    - type: docker
+      templates:
+      - condition:
+          contains:
+            docker.container.name: hello-world-app
+        config:
+          - type: container
+            paths:
+              - /var/lib/docker/containers/${data.docker.container.id}/*.log
+
+setup.template.name: "filebeat-logs"
+setup.template.pattern: "filebeat-logs"
+
+output.elasticsearch:
+  hosts: ${ELASTICSEARCH_HOSTS}
+  index: "filebeat-logs"
